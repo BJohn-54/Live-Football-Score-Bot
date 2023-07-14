@@ -20,3 +20,5 @@ class Config(object):
 
     WEB_SERVER = is_enabled(os.environ.get("WEB_SERVER", "False"), False)
     WEBSITE_URL = "https://sportscore.io"
+    PORT = int(os.environ.get("PORT", 5000))
+    DATA = {}

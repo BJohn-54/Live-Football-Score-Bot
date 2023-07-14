@@ -33,7 +33,6 @@ async def prettify_table_to_markdown(html):
 
             if href:
                 row_text = row_text.replace("\n", " ").strip()
-                # replace the last | with a ]( to make the link work
                 row_text = row_text[::-1].replace("|", "", 1)[::-1]
                 row_text = f"{row_text}"
 
