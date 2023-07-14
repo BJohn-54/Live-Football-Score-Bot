@@ -1,5 +1,4 @@
 from contextlib import suppress
-import datetime
 
 
 import aiohttp
@@ -30,8 +29,13 @@ async def start(bot: Client, message: Message):
     data = await prettify_table_to_markdown(source)
 
     if not data:
-        return await func("No live matches found!", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Refresh", callback_data="live")]]))
-    
+        return await func(
+            "No live matches found!",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Refresh", callback_data="live")]]
+            ),
+        )
+
     buttons = []
     for dat in data:
         text = dat["row_text"]
@@ -47,10 +51,9 @@ async def start(bot: Client, message: Message):
 
         buttons.append([InlineKeyboardButton(**kwargs)])
 
-
     buttons.append([InlineKeyboardButton("Refresh", callback_data="live")])
 
-    text = f"**Last updated at {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')} UTC**"
+    text = f"{bot.me.mention} statistics will provide an opportunity for people who are interested in sports to actively monitor a wide range of sports 🏀 ⚽ tournaments - including the results and statistics of each competition"
 
     with suppress(Exception):
         await func(
