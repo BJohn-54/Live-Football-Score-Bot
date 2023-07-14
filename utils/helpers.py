@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from bot.config import Config
+from pyrogram.types import BotCommand
 
 
 async def prettify_table_to_markdown(html):
@@ -39,3 +40,13 @@ async def prettify_table_to_markdown(html):
             data.append({"row_text": row_text, "href": href})
 
     return data or ""
+
+
+async def set_commands(client):
+    commands = [
+        BotCommand(command="start", description="Check if bot is alive"),
+        BotCommand(command="live", description="Get live matches"),
+        BotCommand(command="search", description="Search for matches"),
+    ]
+
+    await client.set_bot_commands(commands)

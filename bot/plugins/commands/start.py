@@ -14,7 +14,7 @@ async def start(bot: Client, message: Message):
 
     if not isinstance(message, Message):
         _, r_user_id = message.data.split("_")
-        
+
         if r_user_id != str(user_id):
             return await message.answer("You are not allowed to do this!")
 
@@ -62,5 +62,4 @@ async def start(bot: Client, message: Message):
 def encode_base64(string):
     string_bytes = string.encode("utf-8")
     base64_bytes = base64.b64encode(string_bytes)
-    base64_string = base64_bytes.decode("utf-8")
-    return base64_string
+    return base64_bytes.decode("utf-8")
