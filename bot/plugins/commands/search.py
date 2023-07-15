@@ -22,7 +22,7 @@ async def search_matches_cb(bot: Client, query: CallbackQuery):
         [[InlineKeyboardButton("Back", callback_data="start")]]
     )
     await query.message.edit(
-        "Send me a query to search for live matches.\nExample: /search Real Madrid",
+        "Send me a query to search for live matches.\nExample: `/search Real Madrid`",
         reply_markup=markup,
     )
 
