@@ -24,7 +24,7 @@ async def prettify_table_to_markdown(html):
                 if td.find("a"):
                     href = Config.WEBSITE_URL + td.find("a")["href"]
                 elif td.find("img"):
-                    image = td.find("img")["alt"].split(" ")[0]
+                    image = td.find("img")["alt"].replace("flag", "").strip()
                 cells.append(td.get_text().strip())
             if cells:
                 if len(cells) == 2:
@@ -171,6 +171,7 @@ FLAGS = {
     "Kazakhstan": "🇰🇿",
     "Kenya": "🇰🇪",
     "Kiribati": "🇰🇮",
+    "South Korea": "🇰🇷",
     "Korea, North": "🇰🇵",
     "Korea, South": "🇰🇷",
     "Kosovo": "🇽🇰",
@@ -202,7 +203,7 @@ FLAGS = {
     "Montenegro": "🇲🇪",
     "Morocco": "🇲🇦",
     "Mozambique": "🇲🇿",
-    "Myanmar (Burma)": "🇲🇲",
+    "Myanmar": "🇲🇲",
     "Namibia": "🇳🇦",
     "Nauru": "🇳🇷",
     "Nepal": "🇳🇵",
