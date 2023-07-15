@@ -5,10 +5,26 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
     WebAppInfo,
+    CallbackQuery,
 )
 
 from bot.config import Config
 from utils import prettify_table_to_markdown
+
+
+@Client.on_callback_query(filters.regex("^search"))
+async def search_matches_cb(bot: Client, query: CallbackQuery):
+    _, user_id = query.data.split("_")
+    if user_id != str(query.from_user.id):
+        return await query.answer("You are not allowed to do this!")
+    await query.answer()
+    markup = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("Back", callback_data="start")]]
+    )
+    await query.message.edit(
+        "Send me a query to search for live matches.\nExample: /search Real Madrid",
+        reply_markup=markup,
+    )
 
 
 @Client.on_message(filters.command("search") & filters.incoming)

@@ -21,3 +21,5 @@ async def start_webserver():
     await app.setup()
     await web.TCPSite(app, "0.0.0.0", 8000).start()
     logging.info("Web server started")
+
+
