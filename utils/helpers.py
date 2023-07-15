@@ -1,47 +1,52 @@
+import aiohttp
 from bs4 import BeautifulSoup
 from bot.config import Config
 from pyrogram.types import BotCommand
 
 
 async def prettify_table_to_markdown(html):
+    if isinstance(html, str):
+        html = [html]
+
     data = []
-    soup = BeautifulSoup(html, "html.parser")
-    table = soup.find("table")  # Assuming there is only one table element
-    # table = ""
-    if not table:
-        return ""  # No table found
+    for h in html:
+        soup = BeautifulSoup(h, "html.parser")
+        table = soup.find("table")  # Assuming there is only one table element
+        # table = ""
+        if not table:
+            return ""  # No table found
 
-    for row in table.find_all("tr"):
-        href = ""
-        image = ""
-        cells = []
-        for td in row.find_all("td"):
-            if td.find("a"):
-                href = Config.WEBSITE_URL + td.find("a")["href"]
-            elif td.find("img"):
-                image = td.find("img")["alt"].split(" ")[0]
-            cells.append(td.get_text().strip())
-        if cells:
-            if len(cells) == 2:
-                cells.pop(1)
+        for row in table.find_all("tr"):
+            href = ""
+            image = ""
+            cells = []
+            for td in row.find_all("td"):
+                if td.find("a"):
+                    href = Config.WEBSITE_URL + td.find("a")["href"]
+                elif td.find("img"):
+                    image = td.find("img")["alt"].split(" ")[0]
+                cells.append(td.get_text().strip())
+            if cells:
+                if len(cells) == 2:
+                    cells.pop(1)
 
-            if len(cells) == 9:
-                cells = cells[2:5]
+                if len(cells) == 9:
+                    cells = cells[2:5]
 
-            cells.append("\n")
-            row_text = " | ".join(cells)
+                cells.append("\n")
+                row_text = " | ".join(cells)
 
-            if len(cells) == 2:
-                row_text = row_text.replace("\n", " ")
-                flag = FLAGS.get(image, "")
-                row_text = f"{flag} {row_text.replace(' | ', ' ')} "
+                if len(cells) == 2:
+                    row_text = row_text.replace("\n", " ")
+                    flag = FLAGS.get(image, "")
+                    row_text = f"{flag} {row_text.replace(' | ', ' ')} "
 
-            if href:
-                row_text = row_text.replace("\n", " ").strip()
-                row_text = row_text[::-1].replace("|", "", 1)[::-1]
-                row_text = f"{row_text}"
+                if href:
+                    row_text = row_text.replace("\n", " ").strip()
+                    row_text = row_text[::-1].replace("|", "", 1)[::-1]
+                    row_text = f"{row_text}"
 
-            data.append({"row_text": row_text, "href": href})
+                data.append({"row_text": row_text, "href": href})
 
     return data or ""
 
@@ -54,6 +59,21 @@ async def set_commands(client):
     ]
 
     await client.set_bot_commands(commands)
+
+
+async def get_source(url):
+    i = 1
+    sources = []
+    while True:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{url}?page={i}") as resp:
+                if resp.status != 200:
+                    break
+                data = await resp.text()
+                sources.append(data)
+                i += 1
+
+    return sources
 
 
 FLAGS = {

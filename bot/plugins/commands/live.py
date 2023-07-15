@@ -10,6 +10,7 @@ from pyrogram.types import (
 
 from bot.config import Config
 from utils import prettify_table_to_markdown
+from utils.helpers import get_source
 
 
 @Client.on_message(filters.command(["live"]) & filters.incoming)
@@ -24,10 +25,8 @@ async def live(bot: Client, message: Message or CallbackQuery):
             return await message.answer("You are not allowed to do this!")
 
     func = message.reply if isinstance(message, Message) else message.edit_message_text
-    async with aiohttp.ClientSession() as session:
-        async with session.get(Config.WEBSITE_URL) as resp:
-            data = await resp.text()
-            source = data
+
+    source = await get_source(Config.WEBSITE_URL)
 
     data = await prettify_table_to_markdown(source)
 
@@ -52,11 +51,7 @@ async def live(bot: Client, message: Message or CallbackQuery):
 
     buttons.extend(
         (
-            [
-                InlineKeyboardButton(
-                    "🔄 Refresh", callback_data=f"live_{user_id}"
-                )
-            ],
+            [InlineKeyboardButton("🔄 Refresh", callback_data=f"live_{user_id}")],
             [InlineKeyboardButton("🔙 Back", callback_data="start")],
         )
     )

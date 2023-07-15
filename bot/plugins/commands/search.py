@@ -10,6 +10,7 @@ from pyrogram.types import (
 
 from bot.config import Config
 from utils import prettify_table_to_markdown
+from utils.helpers import get_source
 
 
 @Client.on_callback_query(filters.regex("^search"))
@@ -36,10 +37,7 @@ async def search_matches(bot: Client, message: Message):
 
     q = message.text.split(None, 1)[1]
     out = await message.reply("Searching...")
-    async with aiohttp.ClientSession() as session:
-        async with session.get(Config.WEBSITE_URL) as resp:
-            data = await resp.text()
-            source = data
+    source = await get_source(Config.WEBSITE_URL)
     data = await prettify_table_to_markdown(source)
 
     if not data:

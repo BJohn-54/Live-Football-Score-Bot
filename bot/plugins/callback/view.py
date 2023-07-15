@@ -9,6 +9,7 @@ from pyrogram.types import (
 
 from bot.config import Config
 from utils import prettify_table_to_markdown
+from utils.helpers import get_source
 
 
 @Client.on_callback_query(filters.regex("^view"))
@@ -23,10 +24,7 @@ async def view_matches(bot: Client, query: CallbackQuery):
     if not reply_text:
         return await query.answer("Something went wrong!", show_alert=True)
 
-    async with aiohttp.ClientSession() as session:
-        async with session.get(Config.WEBSITE_URL) as resp:
-            data = await resp.text()
-            source = data
+    source = await get_source(Config.WEBSITE_URL)
     data = await prettify_table_to_markdown(source)
 
     if not data:
