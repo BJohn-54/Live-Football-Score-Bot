@@ -22,3 +22,4 @@ class Config(object):
     WEBSITE_URL = "https://sportscore.io"
     PORT = int(os.environ.get("PORT", 5000))
     DATA = {}
+    MATCHES = []
