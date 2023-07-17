@@ -30,7 +30,7 @@ class TickerDatabase:
         return await self.matches.find_one({"match_id": match_id})
 
     async def get_all_matches(self):
-        return self.matches.find()
+        return await self.matches.find().to_list(length=None)
 
     async def delete_match(self, match_id):
         await self.matches.delete_one({"match_id": match_id})

@@ -207,6 +207,8 @@ async def check_match_status(app):
         if text_to_sent:
             for user_id in match["users"]:
                 for text in text_to_sent:
+                    
+                    text = f'**{text}**\n\n{match_summary["home_team"]} {match_summary["home_score"]} - {match_summary["away_score"]} {match_summary["away_team"]}\nTime (minutes): {match_summary["time_status"]} 🕒'
                     with suppress(Exception):
                         await app.send_message(
                             user_id, text, reply_markup=markup(user_id)
