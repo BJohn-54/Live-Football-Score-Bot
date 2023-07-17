@@ -151,6 +151,10 @@ async def check_match_status(app):
             ),
             "",
         )
+        
+        if not data:
+            break
+
         edata = encode_base64(data["row_text"])[:10]
 
         time_status = match_summary["time_status"].lower()

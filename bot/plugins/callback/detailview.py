@@ -26,7 +26,7 @@ async def detail_view_matches(bot: Client, query: CallbackQuery):
         ),
         "",
     )
-    
+
     if not data:
         return await query.answer("Something went wrong!", show_alert=True)
 
@@ -34,6 +34,7 @@ async def detail_view_matches(bot: Client, query: CallbackQuery):
 
     match_summary = await get_match_summary(url)
     match_data = await db.ticker.get_match(match_id)
+
 
     if not match_summary:
         return await query.answer("Something went wrong!", show_alert=True)
