@@ -43,11 +43,12 @@ async def view_matches(bot: Client, query: CallbackQuery):
                 is_href = True
 
         if is_href and href:
-            kwargs = {"text": text}
-            if query.message.chat.type == enums.ChatType.PRIVATE:
-                kwargs["web_app"] = WebAppInfo(url=href)
-            else:
-                kwargs["url"] = href
+            match_id = href.split("/")[-2]
+            kwargs = {
+                "text": text,
+                "callback_data": f"detail_view {match_id} {encoded_data} {user_id}",
+            }
+
             buttons.append([InlineKeyboardButton(**kwargs)])
 
     buttons.extend(

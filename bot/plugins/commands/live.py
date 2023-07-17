@@ -72,7 +72,9 @@ async def live(bot: Client, message: Message or CallbackQuery):
     # total_pages = int(len(org_data) / limit) + 1
     pagination.insert(
         1,
-        InlineKeyboardButton(f"Page. {int(offset/limit) + 1}", callback_data="ignore"),
+        InlineKeyboardButton(
+            f"Page. {offset // limit + 1}", callback_data="ignore"
+        ),
     )
     if pagination:
         buttons.append(pagination)
