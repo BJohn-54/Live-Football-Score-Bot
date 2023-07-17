@@ -28,6 +28,9 @@ async def start(bot: Client, message: Message or CallbackQuery):
                 ),
             ],
             [
+                InlineKeyboardButton("SportScore.io", url="https://SportScore.io"),
+            ],
+            [
                 InlineKeyboardButton(
                     "Check if bot is up", callback_data=f"ping_{user_id}"
                 ),
