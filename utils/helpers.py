@@ -155,7 +155,7 @@ async def check_match_status(app):
         if not data:
             break
 
-        edata = encode_base64(data["row_text"])[:10]
+        edata = encode_base64(data["row_text"])[::-1][:25]
 
         time_status = match_summary["time_status"].lower()
         text_to_sent = []

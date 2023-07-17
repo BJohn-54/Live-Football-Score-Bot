@@ -19,7 +19,7 @@ async def live(bot: Client, message: Message or CallbackQuery):
     limit = 8
     if not isinstance(message, Message):
         if len(message.data.split("_")) == 2:
-            _, r_user_id = message.data.split("_")  
+            _, r_user_id = message.data.split("_")
         elif len(message.data.split("_")) == 3:
             _, r_user_id, offset = message.data.split("_")
             offset = int(offset)
@@ -45,7 +45,7 @@ async def live(bot: Client, message: Message or CallbackQuery):
         kwargs = {"text": text}
         href = dat["href"]
         if not href:
-            encoded_data = encode_base64(text)[:10]
+            encoded_data = encode_base64(text[::-1])[:25]
             Config.DATA[encoded_data] = text
             kwargs["callback_data"] = f"view {encoded_data} {user_id}"
             buttons.append([InlineKeyboardButton(**kwargs)])
@@ -72,9 +72,7 @@ async def live(bot: Client, message: Message or CallbackQuery):
     # total_pages = int(len(org_data) / limit) + 1
     pagination.insert(
         1,
-        InlineKeyboardButton(
-            f"Page. {offset // limit + 1}", callback_data="ignore"
-        ),
+        InlineKeyboardButton(f"Page. {offset // limit + 1}", callback_data="ignore"),
     )
     if pagination:
         buttons.append(pagination)
