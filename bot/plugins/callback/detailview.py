@@ -42,7 +42,7 @@ async def detail_view_matches(bot: Client, query: CallbackQuery):
     text = Messages.DETAIL_VIEW.format(**match_summary)
 
     kwargs = {
-        "text": data["row_text"],
+        "text": "Watch Match Live",
     }
 
     if query.message.chat.type == enums.ChatType.PRIVATE:
