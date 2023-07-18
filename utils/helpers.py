@@ -93,6 +93,7 @@ async def get_source(url):
 async def get_matches():
     sources = await get_source(Config.WEBSITE_URL)
     data = await prettify_table_to_markdown(sources)
+    # print(data)
     Config.MATCHES = data
 
 
@@ -140,6 +141,7 @@ def encode_base64(string):
 
 async def check_match_status(app):
     all_matches = await db.ticker.get_all_matches()
+    # print(all_matches)
     for match in all_matches:
         match_summary = await get_match_summary(match["url"])
 
@@ -151,9 +153,10 @@ async def check_match_status(app):
             ),
             "",
         )
-        
+
         if not data:
-            break
+            await db.ticker.delete_match(match["match_id"])
+            continue
 
         edata = encode_base64(data["row_text"])[::-1][:25]
 
@@ -211,7 +214,6 @@ async def check_match_status(app):
         if text_to_sent:
             for user_id in match["users"]:
                 for text in text_to_sent:
-                    
                     text = f'**{text}**\n\n{match_summary["home_team"]} {match_summary["home_score"]} - {match_summary["away_score"]} {match_summary["away_team"]}\nTime (minutes): {match_summary["time_status"]} 🕒'
                     with suppress(Exception):
                         await app.send_message(
