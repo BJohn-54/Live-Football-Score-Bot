@@ -31,6 +31,7 @@ async def live(bot: Client, message: Message or CallbackQuery):
     data = org_data = [x for x in Config.MATCHES if not x["href"]]
 
     if not data:
+        print("No live matches found!", data)
         return await func(
             "No live matches found!",
             reply_markup=InlineKeyboardMarkup(
