@@ -86,6 +86,7 @@ async def get_source(url):
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{url}?page={i}") as resp:
                 if resp.status != 200:
+                    print(f"Broke at page {i}")
                     break
                 data = await resp.text()
                 sources.append(data)
@@ -97,6 +98,7 @@ async def get_source(url):
 async def get_matches():
     sources = await get_source(Config.WEBSITE_URL)
     data = await prettify_table_to_markdown(sources)
+    print(data + "\n")
     Config.MATCHES = data
 
 
