@@ -100,7 +100,7 @@ async def get_source(url):
 async def get_matches():
     sources = await get_source(Config.WEBSITE_URL)
     data = await prettify_table_to_markdown(sources)
-    print(str(data) + "\n")
+    # print(str(data) + "\n")
     Config.MATCHES = data
 
 
