@@ -385,6 +385,8 @@ FLAGS = {
     "Senegal": "🇸🇳",
     "Serbia": "🇷🇸",
     "Seychelles": "🇸🇨",
+    "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+    "Scottish": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
     "Sierra Leone": "🇸🇱",
     "Singapore": "🇸🇬",
     "Slovakia": "🇸🇰",
