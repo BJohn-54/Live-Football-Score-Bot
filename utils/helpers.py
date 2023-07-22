@@ -86,6 +86,8 @@ async def get_source(url):
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{url}?page={i}") as resp:
                 if resp.status != 200:
+                    print(f"Status code: {resp.status}")
+                    print(resp.reason)
                     print(f"Broke at page {i}")
                     break
                 data = await resp.text()
