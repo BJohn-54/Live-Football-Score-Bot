@@ -55,7 +55,7 @@ async def prettify_table_to_markdown(html):
                     flag = FLAGS.get(image, "")
                     row_text = f"{flag} {row_text.replace(' | ', ' ')} "
                     if "International" in row_text:
-                        row_text = "🗺️ " + row_text
+                        row_text = f"🗺️ {row_text}"
                     if "UEFA" in row_text:
                         row_text = "⚽ " + row_text
 
