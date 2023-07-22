@@ -8,6 +8,6 @@ if __name__ == "__main__":
     app = Bot()
     scheduler = AsyncIOScheduler()
     scheduler.add_job(get_matches, "interval", minutes=1)
-    scheduler.add_job(check_match_status, "interval", seconds=10, args=[app])
+    scheduler.add_job(check_match_status, "interval", minutes=1, args=[app])
     scheduler.start()
     app.run()
