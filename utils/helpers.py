@@ -194,28 +194,28 @@ async def check_match_status(app):
             text_to_sent.append(text)
 
         if match["home_score"] != match_summary["home_score"]:
-            text = f"Goal! {match_summary['home_team']} scored against {match_summary['away_team']}!"
+            text = f"Goal ⚽ {match_summary['home_team']} scored against {match_summary['away_team']}!"
             text_to_sent.append(text)
         if match["away_score"] != match_summary["away_score"]:
-            text = f"Goal! {match_summary['away_team']} scored against {match_summary['home_team']}!"
+            text = f"Goal ⚽ {match_summary['away_team']} scored against {match_summary['home_team']}!"
             text_to_sent.append(text)
         if match["home_corner_kick"] != match_summary["home_corner_kick"]:
-            text = f"Corner Kick! {match_summary['home_team']} got a corner kick!"
+            text = f"Corner Kick 🏁 {match_summary['home_team']} got a corner kick!"
             text_to_sent.append(text)
         if match["away_corner_kick"] != match_summary["away_corner_kick"]:
-            text = f"Corner Kick! {match_summary['away_team']} got a corner kick!"
+            text = f"Corner Kick 🏁 {match_summary['away_team']} got a corner kick!"
             text_to_sent.append(text)
         if match["home_red_card"] != match_summary["home_red_card"]:
-            text = f"Red Card! {match_summary['home_team']} got a red card!"
+            text = f"Red Card 🟥 {match_summary['home_team']} got a red card!"
             text_to_sent.append(text)
         if match["home_yellow_card"] != match_summary["home_yellow_card"]:
-            text = f"Yellow Card! {match_summary['home_team']} got a yellow card!"
+            text = f"Yellow Card 🟨 {match_summary['home_team']} got a yellow card!"
             text_to_sent.append(text)
         if match["away_red_card"] != match_summary["away_red_card"]:
-            text = f"Red Card! {match_summary['away_team']} got a red card!"
+            text = f"Red Card 🟥 {match_summary['away_team']} got a red card!"
             text_to_sent.append(text)
         if match["away_yellow_card"] != match_summary["away_yellow_card"]:
-            text = f"Yellow Card! {match_summary['away_team']} got a yellow card!"
+            text = f"Yellow Card 🟨 {match_summary['away_team']} got a yellow card!"
             text_to_sent.append(text)
 
         if text_to_sent:
