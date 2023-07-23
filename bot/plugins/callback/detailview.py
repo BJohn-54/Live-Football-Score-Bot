@@ -42,7 +42,7 @@ async def detail_view_matches(bot: Client, query: CallbackQuery):
     text = Messages.DETAIL_VIEW.format(**match_summary)
 
     kwargs = {
-        "text": "Watch Match Live",
+        "text": "Watch Live",
     }
 
     if query.message.chat.type == enums.ChatType.PRIVATE:
@@ -53,21 +53,21 @@ async def detail_view_matches(bot: Client, query: CallbackQuery):
         [InlineKeyboardButton(**kwargs)],
         [
             InlineKeyboardButton(
-                text="🔕 Unnotify"
+                text="Unnotify 🔕"
                 if match_data and query.from_user.id in match_data["users"]
-                else "🔔 Notify",
+                else "Notify 🔔",
                 callback_data=f"notify {match_id} {edata} {user_id}",
             )
         ],
         [
             InlineKeyboardButton(
-                text="🔄 Refresh",
+                text="Refresh 🔄",
                 callback_data=f"detail_view {match_id} {edata} {user_id}",
             )
         ],
         [
             InlineKeyboardButton(
-                text="🔙 Back",
+                text="Back 🔙",
                 callback_data=f"view {edata} {user_id}",
             )
         ],
