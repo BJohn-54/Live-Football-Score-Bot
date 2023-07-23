@@ -38,13 +38,13 @@ Time (minutes): {time_status} 🕒
 
 🏆 {home_team}
 
-- Corner Kick: {home_corner_kick}
-- Red Card: {home_red_card}
-- Yellow Card: {home_yellow_card}
+- Corner Kick ⚽: {home_corner_kick}
+- Red Card 🟥: {home_red_card}
+- Yellow Card 🟨: {home_yellow_card}
 
 🏆 {away_team}
 
-- Corner Kick: {away_corner_kick}
-- Red Card: {away_red_card}
-- Yellow Card: {away_yellow_card}
+- Corner Kick ⚽: {away_corner_kick}
+- Red Card 🟥: {away_red_card}
+- Yellow Card 🟨: {away_yellow_card}
 """
