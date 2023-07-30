@@ -20,7 +20,7 @@ async def start(bot: Client, message: Message or CallbackQuery):
                 ),
             ],
             [
-                InlineKeyboardButton("Search", callback_data=f"search_{user_id}"),
+                InlineKeyboardButton("Search 🔎", callback_data=f"search_{user_id}"),
             ],
             [
                 InlineKeyboardButton(
