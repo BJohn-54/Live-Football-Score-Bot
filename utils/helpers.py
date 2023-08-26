@@ -7,64 +7,33 @@ from pyrogram.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarku
 import aiohttp
 from database import db
 
-home_xpath = "html body main div div div:nth-of-type(2) div div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(1) div div:nth-of-type(1)"
-away_xpath = "html body main div div div:nth-of-type(2) div div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(3) div div:nth-of-type(2)"
-home_corner_kick_xpath = "html body main div div div:nth-of-type(4) div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(3) div:nth-of-type(1) div:nth-of-type(1)"
-away_corner_kick_xpath = "html body main div div div:nth-of-type(4) div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(3) div:nth-of-type(1) div:nth-of-type(9)"
-time_status_xpath = "html body main div div div:nth-of-type(2) div div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(2) div div:nth-of-type(2) span"
-home_red_card_xpath = "html body main div div div:nth-of-type(4) div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(3) div:nth-of-type(1) div:nth-of-type(2) span:nth-of-type(2)"
-home_yellow_card_xpath = "html body main div div div:nth-of-type(4) div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(3) div:nth-of-type(1) div:nth-of-type(3) span:nth-of-type(2)"
-away_red_card_xpath = "html body main div div div:nth-of-type(4) div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(3) div:nth-of-type(1) div:nth-of-type(8) span:nth-of-type(2)"
-away_yellow_card_xpath = "html body main div div div:nth-of-type(4) div:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(3) div:nth-of-type(1) div:nth-of-type(7) span:nth-of-type(2)"
-
 
 async def prettify_table_to_markdown(html):
-    if isinstance(html, str):
-        html = [html]
-
     data = []
+    # sort by competition name
+    html = sorted(html, key=lambda x: x["competition"]["name"])
     for h in html:
-        soup = BeautifulSoup(h, "html.parser")
-        table = soup.find("table")  # Assuming there is only one table element
-        # table = ""
-        if not table:
-            return ""  # No table found
+        competition = h["competition"]
 
-        for row in table.find_all("tr"):
-            href = ""
-            image = ""
-            cells = []
-            for td in row.find_all("td"):
-                if td.find("a"):
-                    href = Config.WEBSITE_URL + td.find("a")["href"]
-                elif td.find("img"):
-                    image = td.find("img")["alt"].replace("flag", "").strip()
-                cells.append(td.get_text().strip())
-            if cells:
-                if len(cells) == 2:
-                    cells.pop(1)
+        image = competition["thumbnail"]["alt_text"].replace("flag", "").strip()
+        row_text = competition["name"]
 
-                if len(cells) == 9:
-                    cells = cells[2:5]
+        flag = FLAGS.get(image, "")
+        row_text = f"{flag} {row_text.replace(' | ', ' ')} "
+        if "International" in row_text:
+            row_text = f"🗺️ {row_text}"
+        if "UEFA" in row_text:
+            row_text = f"⚽ {row_text}"
+        data.append({"row_text": row_text, "href": ""})
 
-                cells.append("\n")
-                row_text = " | ".join(cells)
-
-                if len(cells) == 2:
-                    row_text = row_text.replace("\n", " ")
-                    flag = FLAGS.get(image, "")
-                    row_text = f"{flag} {row_text.replace(' | ', ' ')} "
-                    if "International" in row_text:
-                        row_text = f"🗺️ {row_text}"
-                    if "UEFA" in row_text:
-                        row_text = "⚽ " + row_text
-
-                if href:
-                    row_text = row_text.replace("\n", " ").strip()
-                    row_text = row_text[::-1].replace("|", "", 1)[::-1]
-                    row_text = f"{row_text}"
-
-                data.append({"row_text": row_text, "href": href})
+        for match in h["matches"]:
+            home_team = match["home_team"]["name"]
+            away_team = match["away_team"]["name"]
+            home_score = match["home_score"]
+            away_score = match["away_score"]
+            href = match["url"]
+            row_text = f"{home_team} | {home_score} - {away_score} | {away_team}"
+            data.append({"row_text": row_text, "href": href})
 
     return data or ""
 
@@ -79,65 +48,73 @@ async def set_commands(client):
     await client.set_bot_commands(commands)
 
 
-async def get_source(url):
+async def get_source():
     i = 1
     sources = []
+    endpoint = (
+        "https://sportscore.io/api/v1/football/matches/?match_status=live&page={}"
+    )
+    api_key = "jbtmquwvjbtm3bwd32se8mry0fbqgk"
+    headers = {"X-API-Key": api_key, "accept": "application/json"}
     while True:
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"{url}?page={i}") as resp:
+            async with session.get(f"{endpoint.format(i)}", headers=headers) as resp:
                 if resp.status != 200:
                     print(f"Status code: {resp.status}")
                     print(resp.reason)
                     print(f"Broke at page {i}")
                     break
-                data = await resp.text()
-                sources.append(data)
+                data = await resp.json()
+                if not data.get("match_groups", []):
+                    break
+                sources += data["match_groups"]
                 i += 1
 
     return sources
 
 
 async def get_matches():
-    sources = await get_source(Config.WEBSITE_URL)
+    sources = await get_source()
     data = await prettify_table_to_markdown(sources)
-    # print(str(data) + "\n")
     Config.MATCHES = data
 
 
 async def get_match_summary(url):
     match_id = url.split("/")[-2]
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            page = await response.text()
-    soup = BeautifulSoup(page, "html.parser")
-
-    home_team = soup.select_one(home_xpath).text.strip()
-    away_team = soup.select_one(away_xpath).text.strip()
-    home_score = soup.find("div", id="home-score").text.strip()
-    away_score = soup.find("div", id="away-score").text.strip()
-    time_status = soup.select_one(time_status_xpath).text.strip()
-
-    home_corner_kick = soup.select_one(home_corner_kick_xpath).text.strip()
-    away_corner_kick = soup.select_one(away_corner_kick_xpath).text.strip()
-
-    home_red_card = soup.select_one(home_red_card_xpath).text.strip()
-    home_yellow_card = soup.select_one(home_yellow_card_xpath).text.strip()
-    away_red_card = soup.select_one(away_red_card_xpath).text.strip()
-    away_yellow_card = soup.select_one(away_yellow_card_xpath).text.strip()
-    return {
-        "match_id": match_id,
-        "home_team": home_team,
-        "away_team": away_team,
-        "home_score": home_score,
-        "away_score": away_score,
-        "time_status": time_status,
-        "home_corner_kick": home_corner_kick,
-        "away_corner_kick": away_corner_kick,
-        "home_red_card": home_red_card,
-        "home_yellow_card": home_yellow_card,
-        "away_red_card": away_red_card,
-        "away_yellow_card": away_yellow_card,
+    "/api/v1/football/match/{match_id}/"
+    headers = {
+        "X-API-Key": "jbtmquwvjbtm3bwd32se8mry0fbqgk",
+        "accept": "application/json",
     }
+    url = f"https://sportscore.io/api/v1/football/match/{match_id}/"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers=headers) as resp:
+            data = await resp.json()
+            home_team = data["home_team"]["name"]
+            away_team = data["away_team"]["name"]
+            home_score = data["home_score"]
+            away_score = data["away_score"]
+            time_status = data["state_display"]
+            home_corner_kick = data["home_team_corners"]
+            away_corner_kick = data["away_team_corners"]
+            home_red_card = data["home_team_red_cards"]
+            home_yellow_card = data["home_team_yellow_cards"]
+            away_red_card = data["away_team_red_cards"]
+            away_yellow_card = data["away_team_yellow_cards"]
+            return {
+                "match_id": match_id,
+                "home_team": home_team,
+                "away_team": away_team,
+                "home_score": home_score,
+                "away_score": away_score,
+                "time_status": time_status,
+                "home_corner_kick": home_corner_kick,
+                "away_corner_kick": away_corner_kick,
+                "home_red_card": home_red_card,
+                "home_yellow_card": home_yellow_card,
+                "away_red_card": away_red_card,
+                "away_yellow_card": away_yellow_card,
+            }
 
 
 def encode_base64(string):

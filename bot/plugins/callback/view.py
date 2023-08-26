@@ -1,3 +1,4 @@
+import aiohttp
 from pyrogram import Client, filters, enums
 from pyrogram.types import (
     InlineKeyboardButton,
@@ -6,74 +7,67 @@ from pyrogram.types import (
     WebAppInfo,
 )
 
-from bot.config import Config, Messages
-from utils import get_match_summary
-from database import db
+from bot.config import Config
 
 
-@Client.on_callback_query(filters.regex("^detail_view"))
-async def detail_view_matches(bot: Client, query: CallbackQuery):
-    _, match_id, edata, user_id = query.data.split()
+@Client.on_callback_query(filters.regex("^view"))
+async def view_matches(bot: Client, query: CallbackQuery):
+    _, encoded_data, user_id = query.data.split()
 
     if user_id != str(query.from_user.id):
         return await query.answer("You are not allowed to do this!")
 
-    data = next(
-        (
-            dat
-            for dat in Config.MATCHES
-            if dat["href"] and dat["href"].split("/")[-2] == match_id
-        ),
-        "",
-    )
+    reply_text = Config.DATA.get(encoded_data)
+
+    if not reply_text:
+        return await query.answer("Something went wrong!", show_alert=True)
+
+    data = Config.MATCHES
 
     if not data:
-        return await query.answer("Something went wrong!", show_alert=True)
+        return await query.answer("No live matches found!", show_alert=True)
 
-    url = data["href"]
+    buttons = []
 
-    match_summary = await get_match_summary(url)
-    match_data = await db.ticker.get_match(match_id)
+    is_href = False
 
+    for dat in data:
+        text = dat["row_text"]
+        href = dat["href"]
 
-    if not match_summary:
-        return await query.answer("Something went wrong!", show_alert=True)
+        if not href:
+            if is_href:
+                break
 
-    text = Messages.DETAIL_VIEW.format(**match_summary)
+            if text == reply_text:
+                is_href = True
+        if is_href and href:
+            match_id = href.split("/")[-2]
+            kwargs = {
+                "text": text,
+                "callback_data": f"detail_view {match_id} {encoded_data} {user_id}",
+            }
 
-    kwargs = {
-        "text": "Watch Live",
-    }
+            buttons.append([InlineKeyboardButton(**kwargs)])
 
-    if query.message.chat.type == enums.ChatType.PRIVATE:
-        kwargs["web_app"] = WebAppInfo(url=url)
-    else:
-        kwargs["url"] = url
-    buttons = [
-        [InlineKeyboardButton(**kwargs)],
-        [
-            InlineKeyboardButton(
-                text="Unnotify 🔕"
-                if match_data and query.from_user.id in match_data["users"]
-                else "Notify 🔔",
-                callback_data=f"notify {match_id} {edata} {user_id}",
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Refresh 🔄",
-                callback_data=f"detail_view {match_id} {edata} {user_id}",
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Back 🔙",
-                callback_data=f"view {edata} {user_id}",
-            )
-        ],
-    ]
+    buttons.extend(
+        (
+            [
+                InlineKeyboardButton(
+                    "🔄 Refresh",
+                    callback_data=f"view {encoded_data} {query.from_user.id}",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    "🔙 Back", callback_data=f"live_{query.from_user.id}"
+                )
+            ],
+        )
+    )
 
     await query.message.edit_text(
-        text=text,
+        text=reply_text,
+        disable_web_page_preview=True,
         reply_markup=InlineKeyboardMarkup(buttons),
     )
