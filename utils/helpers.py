@@ -49,7 +49,7 @@ async def set_commands(client):
 
 
 async def get_source():
-    i = 1
+    i = 0
     sources = []
     endpoint = (
         "https://sportscore.io/api/v1/football/matches/?match_status=live&page={}"
