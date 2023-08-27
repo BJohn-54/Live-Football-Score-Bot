@@ -24,7 +24,7 @@ async def start(bot: Client, message: Message or CallbackQuery):
             ],
             [
                 InlineKeyboardButton(
-                    "Join SportScore Chatroom", url="https://t.me/+a_3DI3_yNmJlZjQx"
+                    "Join SportScore Chatroom 💬", url="https://t.me/+a_3DI3_yNmJlZjQx"
                 ),
             ],
             [
