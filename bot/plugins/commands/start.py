@@ -16,7 +16,7 @@ async def start(bot: Client, message: Message or CallbackQuery):
         [
             [
                 InlineKeyboardButton(
-                    "Football Live Matches", callback_data=f"live_{user_id}"
+                    "Football Live Matches ⚽", callback_data=f"live_{user_id}"
                 ),
                 InlineKeyboardButton("Search 🔎", callback_data=f"search_{user_id}"),
             ],
@@ -24,7 +24,7 @@ async def start(bot: Client, message: Message or CallbackQuery):
                 InlineKeyboardButton(
                     "Join SportScore Chatroom 💬", url="https://t.me/+a_3DI3_yNmJlZjQx"
                 ),
-                InlineKeyboardButton("SportScore.io", url="https://SportScore.io"),
+                InlineKeyboardButton("SportScore.io 🌐", url="https://SportScore.io"),
             ],
         ]
     )
