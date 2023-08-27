@@ -18,22 +18,13 @@ async def start(bot: Client, message: Message or CallbackQuery):
                 InlineKeyboardButton(
                     "Football Live Matches", callback_data=f"live_{user_id}"
                 ),
-            ],
-            [
                 InlineKeyboardButton("Search 🔎", callback_data=f"search_{user_id}"),
             ],
             [
                 InlineKeyboardButton(
                     "Join SportScore Chatroom 💬", url="https://t.me/+a_3DI3_yNmJlZjQx"
                 ),
-            ],
-            [
                 InlineKeyboardButton("SportScore.io", url="https://SportScore.io"),
-            ],
-            [
-                InlineKeyboardButton(
-                    "Check if bot is up", callback_data=f"ping_{user_id}"
-                ),
             ],
         ]
     )
