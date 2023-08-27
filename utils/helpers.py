@@ -88,6 +88,7 @@ async def get_match_summary(url):
     url = f"https://sportscore.io/api/v1/football/match/{match_id}/"
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=headers) as resp:
+            print(await resp.text())
             data = await resp.json()
             home_team = data["home_team"]["name"]
             away_team = data["away_team"]["name"]
