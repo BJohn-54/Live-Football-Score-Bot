@@ -16,6 +16,8 @@ async def prettify_table_to_markdown(html):
         competition = h["competition"]
         if not competition:
             continue
+        
+        competition["thumbnail"] = competition.get("thumbnail", {}) or {}
         image = competition.get("thumbnail", {}).get("alt_text", "").replace("flag", "").strip()
         
         row_text = competition["name"]
