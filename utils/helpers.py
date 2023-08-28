@@ -27,13 +27,13 @@ async def prettify_table_to_markdown(html):
 
         row_text = competition["name"]
 
-        flag = FLAGS.get(image, "⚽")
+        flag = FLAGS.get(image, "")
         row_text = f"{flag} {row_text.replace(' | ', ' ')} "
-        if "International" in row_text and flag != "⚽":
+        if "International" in row_text:
             row_text = f"🗺️ {row_text}"
-        if "UEFA" in row_text and flag != "⚽":
+        if "UEFA" in row_text :
             row_text = f"⚽ {row_text}"
-        if "English" in row_text and flag != "⚽":
+        if "English" in row_text:
             row_text = f"🏴󠁧󠁢󠁥󠁮󠁧󠁿 {row_text}"
         data.append({"row_text": row_text, "href": ""})
 
