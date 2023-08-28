@@ -18,7 +18,7 @@ async def prettify_table_to_markdown(html):
         image = competition["thumbnail"]["alt_text"].replace("flag", "").strip()
         row_text = competition["name"]
 
-        flag = FLAGS.get(image, "")
+        flag = FLAGS.get(image, "⚽")
         row_text = f"{flag} {row_text.replace(' | ', ' ')} "
         if "International" in row_text:
             row_text = f"🗺️ {row_text}"
@@ -233,6 +233,8 @@ FLAGS = {
     "Bhutan": "🇧🇹",
     "Bolivia": "🇧🇴",
     "Bosnia & Herzegovina": "🇧🇦",
+    "Bosnia and Herzegovina": "🇧🇦",
+    "CAF": "🇨🇫",
     "Botswana": "🇧🇼",
     "Brazil": "🇧🇷",
     "Brunei": "🇧🇳",
@@ -262,6 +264,7 @@ FLAGS = {
     "East Timor": "🇹🇱",
     "Ecuador": "🇪🇨",
     "Egypt": "🇪🇬",
+    "English": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     "El Salvador": "🇸🇻",
     "Equatorial Guinea": "🇬🇶",
     "Eritrea": "🇪🇷",
