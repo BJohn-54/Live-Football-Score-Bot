@@ -275,7 +275,6 @@ FLAGS = {
     "East Timor": "🇹🇱",
     "Ecuador": "🇪🇨",
     "Egypt": "🇪🇬",
-    "English": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     "El Salvador": "🇸🇻",
     "Equatorial Guinea": "🇬🇶",
     "Eritrea": "🇪🇷",
