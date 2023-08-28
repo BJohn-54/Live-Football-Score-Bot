@@ -33,6 +33,8 @@ async def prettify_table_to_markdown(html):
             row_text = f"🗺️ {row_text}"
         if "UEFA" in row_text and flag != "⚽":
             row_text = f"⚽ {row_text}"
+        if "English" in row_text and flag != "⚽":
+            row_text = f"🏴󠁧󠁢󠁥󠁮󠁧󠁿 {row_text}"
         data.append({"row_text": row_text, "href": ""})
 
         for match in h["matches"]:
