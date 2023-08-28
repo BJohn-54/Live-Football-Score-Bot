@@ -14,7 +14,8 @@ async def prettify_table_to_markdown(html):
     html = sorted(html, key=lambda x: x["competition"]["name"])
     for h in html:
         competition = h["competition"]
-
+        if not competition:
+            continue
         image = competition["thumbnail"]["alt_text"].replace("flag", "").strip()
         row_text = competition["name"]
 
