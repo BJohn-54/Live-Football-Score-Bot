@@ -392,6 +392,7 @@ FLAGS = {
     "Spain": "🇪🇸",
     "Sri Lanka": "🇱🇰",
     "Sudan": "🇸🇩",
+    "Sweden": "🇸🇪",
     "Suriname": "🇸🇷",
     "Switzerland": "🇨🇭",
     "Syria": "🇸🇾",
